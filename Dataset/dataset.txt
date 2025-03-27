@@ -1,0 +1,112 @@
+-- Drop tables if they exist
+DROP TABLE IF EXISTS rental;
+DROP TABLE IF EXISTS membership;
+DROP TABLE IF EXISTS membership_type;
+DROP TABLE IF EXISTS bike;
+DROP TABLE IF EXISTS customer;
+
+-- Create customer table
+CREATE TABLE customer (
+    id      INT PRIMARY KEY,
+    name    VARCHAR(30),
+    email   VARCHAR(50)
+);
+
+-- Create bike table
+CREATE TABLE bike (
+    id              INT PRIMARY KEY,
+    model           VARCHAR(50),
+    category        VARCHAR(50),
+    price_per_hour  DECIMAL,
+    price_per_day   DECIMAL,
+    status          VARCHAR(20)
+);
+
+-- Create rental table
+CREATE TABLE rental (
+    id              INT PRIMARY KEY,
+    customer_id     INT REFERENCES customer(id),
+    bike_id         INT REFERENCES bike(id),
+    start_timestamp TIMESTAMP,
+    duration        INT,
+    total_paid      DECIMAL
+);
+
+-- Create membership_type table
+CREATE TABLE membership_type (
+    id          INT PRIMARY KEY,
+    name        VARCHAR(50),
+    description VARCHAR(500),
+    price       DECIMAL
+);
+
+-- Create membership table
+CREATE TABLE membership (
+    id                  INT PRIMARY KEY,
+    membership_type_id  INT REFERENCES membership_type(id),
+    customer_id         INT REFERENCES customer(id),
+    start_date          DATE,
+    end_date            DATE,
+    total_paid          DECIMAL
+);
+
+-- Insert data into customer table
+INSERT INTO customer VALUES
+    (1, 'John Doe', 'john.doe@example.com'),
+    (2, 'Alice Smith', 'alice.smith@example.com'),
+    (3, 'Bob Johnson', 'bob.johnson@example.com'),
+    (4, 'Eva Brown', 'eva.brown@example.com'),
+    (5, 'Michael Lee', 'michael.lee@example.com'),
+    (6, 'Sarah White', 'sarah.white@example.com'),
+    (7, 'David Wilson', 'david.wilson@example.com'),
+    (8, 'Emily Davis', 'emily.davis@example.com'),
+    (9, 'Daniel Miller', 'daniel.miller@example.com'),
+    (10, 'Olivia Taylor', 'olivia.taylor@example.com');
+
+-- Insert data into bike table
+INSERT INTO bike VALUES
+    (1, 'Mountain Bike 1', 'mountain bike', 10.00, 50.00, 'available'),
+    (2, 'Road Bike 1', 'road bike', 12.00, 60.00, 'available'),
+    (3, 'Hybrid Bike 1', 'hybrid', 8.00, 40.00, 'rented'),
+    (4, 'Electric Bike 1', 'electric', 15.00, 75.00, 'available'),
+    (5, 'Mountain Bike 2', 'mountain bike', 10.00, 50.00, 'out of service'),
+    (6, 'Road Bike 2', 'road bike', 12.00, 60.00, 'available'),
+    (7, 'Hybrid Bike 2', 'hybrid', 8.00, 40.00, 'out of service'),
+    (8, 'Electric Bike 2', 'electric', 15.00, 75.00, 'available'),
+    (9, 'Mountain Bike 3', 'mountain bike', 10.00, 50.00, 'rented'),
+    (10, 'Road Bike 3', 'road bike', 12.00, 60.00, 'available');
+
+-- Insert data into rental table
+INSERT INTO rental VALUES
+    (1, 1, 1, '2022-11-01 10:00:00', 240, 50.00),
+    (2, 1, 1, '2022-11-02 10:00:00', 245, 50.00),
+    (3, 1, 1, '2022-11-03 10:00:00', 250, 50.00),
+    (4, 1, 1, '2022-11-04 10:00:00', 235, 50.00),
+    (5, 1, 1, '2022-12-05 10:00:00', 155, 50.00),
+    (6, 2, 2, '2022-12-08 11:00:00', 250, 60.00),
+    (7, 3, 3, '2022-12-13 12:00:00', 245, 40.00),
+    (8, 1, 1, '2023-01-05 10:00:00', 240, 50.00),
+    (9, 2, 2, '2023-01-08 11:00:00', 235, 60.00),
+    (10, 3, 3, '2023-02-13 12:00:00', 245, 40.00);
+
+-- Insert data into membership_type table
+INSERT INTO membership_type VALUES
+    (1, 'Basic Monthly', 'Unlimited rides with non-electric bikes. Renews monthly.', 100.00),
+    (2, 'Basic Annual', 'Unlimited rides with non-electric bikes. Renews annually.', 500.00),
+    (3, 'Premium Monthly', 'Unlimited rides with all bikes. Renews monthly.', 200.00);
+
+-- Insert data into membership table
+INSERT INTO membership VALUES
+    (1, 2, 3, '2023-08-01', '2023-08-31', 500.00),
+    (2, 1, 2, '2023-08-01', '2023-08-31', 100.00),
+    (3, 3, 4, '2023-08-01', '2023-08-31', 200.00),
+    (4, 1, 1, '2023-09-01', '2023-09-30', 100.00),
+    (5, 2, 2, '2023-09-01', '2023-09-30', 500.00),
+    (6, 3, 3, '2023-09-01', '2023-09-30', 200.00);
+
+-- Select data from all tables
+SELECT * FROM customer;
+SELECT * FROM bike;
+SELECT * FROM rental;
+SELECT * FROM membership_type;
+SELECT * FROM membership;
